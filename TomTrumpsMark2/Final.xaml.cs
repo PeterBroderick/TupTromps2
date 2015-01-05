@@ -12,7 +12,13 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
+using Microsoft.WindowsAzure.MobileServices;
+using System.Diagnostics;
+using Newtonsoft.Json;
+using Windows.UI.Popups;
+using Windows.ApplicationModel;
+using Windows.Storage;
+using TomTrumpsMark2.Common;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace TomTrumpsMark2
@@ -22,29 +28,36 @@ namespace TomTrumpsMark2
     /// </summary>
     public sealed partial class Final : Page
     {
-        string items;
+        private IMobileServiceTable<Item> todoTable = App.MobileService.GetTable<Item>();
+        Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+        private NavigationHelper navigationHelper;
+        
         public Final()
         {
             this.InitializeComponent();
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            TomTrumpsMark2.MainPage.AnotherPagePayload passedParameter = e.Parameter as TomTrumpsMark2.MainPage.AnotherPagePayload;     
+            int parameterMovesToAzure = passedParameter.parameterMoves;
+            txtOutput.Text = parameterMovesToAzure.ToString();
+        }
         public async void submit()
         {
-            Item item = new Item { Text = "Awesome item" };
-            await App.MobileService.GetTable<Item>().InsertAsync(item);
+            Item m = new Item();
 
-           // getResult.Text = App.MobileService.GetTable<Item>(item.Text);     
-            view();
-              }
-
-
-        public async void view()
-        {
-
-           // getResult.Text = App.MobileService.GetTable<Item>(); 
-         
-
+            m.Moves = Convert.ToInt32(txtOutput.Text);
+            var todoItem = new Item
+            {
+                Text = txtNameInput.Text,
+                Moves = m.Moves
+            };
+            await App.MobileService.GetTable<Item>().InsertAsync(todoItem);  
         }
+
+
+        
         private void btnYes(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(MainPage));
@@ -57,6 +70,14 @@ namespace TomTrumpsMark2
         public void submit(object sender, TappedRoutedEventArgs e)
         {
             submit();
+            btnSubmit.Visibility = Visibility.Collapsed;
         }
+
+        private void Button_Tapped(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(HiScores));
+        }
+
+       
     }
 }

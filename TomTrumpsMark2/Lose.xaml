@@ -21,13 +21,11 @@
 
             </Grid.ColumnDefinitions>
             <Grid.Background>
-                <ImageBrush Stretch="Fill" ImageSource="Assets/background.png"/>
+                <ImageBrush Stretch="Fill" ImageSource="Assets/backgroundLose.png"/>
             </Grid.Background>
             <Grid HorizontalAlignment="Left" Height="364" Grid.Row="1" VerticalAlignment="Top" Width="1346" Margin="10,10,0,0">
-                <TextBlock Height="103" TextWrapping="Wrap" Text="You Lost" Width="1326" FontSize="96" Foreground="#FFF5311D" Margin="451,88,-431,0" FontFamily="AR DARLING" VerticalAlignment="Top"/>
-                <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Would you like to try again?" VerticalAlignment="Top" Height="36" Width="315" Margin="499,191,532,0" FontFamily="Arial Black" FontSize="24"/>
-                <Button Content="Yes" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="529,224,0,0" Width="98" Click="btnYes"/>
-                <Button Content="No" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="670,224,0,0" Width="98" Click="btnNo"/>
+                <Button HorizontalAlignment="Left" VerticalAlignment="Top" Margin="412,271,0,0" Width="181" Click="btnYes" Opacity="0"/>
+                <Button HorizontalAlignment="Left" VerticalAlignment="Top" Margin="767,271,0,0" Width="150" Click="btnNo" Opacity="0"/>
             </Grid>
 
         </Grid>

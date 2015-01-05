@@ -6,17 +6,20 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <Viewbox Name="grid_jeu" Stretch="Fill" Grid.Column="1" Grid.Row="1"  >
+        <Grid>
+            <Grid.Background>
+                <ImageBrush Stretch="Fill" ImageSource="Assets/backgroundWin1.png"/>
+            </Grid.Background>
+            <Button Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="402,496,0,0" Width="182" Tapped="btnYes" Height="80" Opacity="0"/>
+            <Button Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="771,496,0,0" Width="173" Tapped="btnNo" Height="80" Opacity="0"/>
+            <Grid HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="587" Margin="354,668,0,0">
+                <Button x:Name="btnSubmit" Content="Submit" HorizontalAlignment="Left" VerticalAlignment="Top" Tapped="submit" Margin="475,7,0,0" Height="86" Width="105" Background="#FF22FB00"/>
+                <TextBox x:Name="txtNameInput" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="10,0,0,10" Width="463" Height="80" Background="#FF271010" FontSize="48" Foreground="White"/>
+            </Grid>
+            <Button Content="Scores" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1221,682,0,0" Height="76" Width="116" Tapped="Button_Tapped" Background="#FF29EA0B"/>
+            <TextBlock x:Name="txtOutput"  HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="578,117,0,0" Height="72" Width="118" FontSize="72" FontFamily="AR DELANEY" Foreground="#FFFDE602"/>
 
-    <Grid>
-    	<Grid.Background>
-    		<ImageBrush Stretch="Fill" ImageSource="Assets/background.png"/>
-    	</Grid.Background>
-    	<TextBlock HorizontalAlignment="Left" Height="126" Margin="453,288,0,0" TextWrapping="Wrap" Text="You Won" VerticalAlignment="Top" Width="676" FontSize="96" Foreground="#FF0BFF00" FontFamily="AR DELANEY"/>
-    	<Button Content="Connect" HorizontalAlignment="Left" VerticalAlignment="Top" Tapped="submit" Margin="417,248,0,0"/>
-        <TextBlock x:Name="getResult"  HorizontalAlignment="Left" Margin="508,251,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="37" Width="307"/>
-        <Button Content="Yes" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="525,430,0,0" Width="98" Click="btnYes"/>
-        <Button Content="Quit" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="666,430,0,0" Width="98" Click="btnNo"/>
-        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Would you like to try again?" VerticalAlignment="Top" Height="36" Width="315" Margin="500,392,551,0" FontFamily="Arial Black" FontSize="24"/>
-
-    </Grid>
+        </Grid>
+    </Viewbox>
 </Page>

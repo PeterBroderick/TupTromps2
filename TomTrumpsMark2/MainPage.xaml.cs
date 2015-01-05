@@ -15,78 +15,83 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
-using Windows.UI.Popups;
-using Windows.UI.Xaml.Media;
 using Windows.Storage;
 using Windows.ApplicationModel;
 using Windows.Data.Json;
 using TomTrumpsMark2.Common;
 using Windows.UI.Xaml.Media.Animation;
-
+using Newtonsoft.Json;
+using Microsoft.WindowsAzure.MobileServices;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using Windows.UI.ApplicationSettings;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace TomTrumpsMark2
 {
-
-
      public sealed partial class MainPage : Page
      {
-       
+         AnotherPagePayload payload = new AnotherPagePayload();
+        
+         Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+        
+         private IMobileServiceTable<Item> item = App.MobileService.GetTable<Item>();
+        
         private MediaElement _buzzer;
         
         bool cardOpen = false, leftCardOpen=false, winCheck=false, drawCheck=false, loseCheck=false;
         int drawTwice=0;
         int moves=0;
 		
-        List<Cards> myListofCardsComp = new List<Cards>();
-        List<Cards> myListofCards = new List<Cards>(); 
-        List<Cards> deckCards = new List<Cards>();
-        List<Cards> tempList = new List<Cards>();
-        List<Cards> tempList2 = new List<Cards>();
-        List<Cards> drawList = new List<Cards>();
-        List<Cards> drawList2 = new List<Cards>();
-        
-
+        List<Cards> myListofCardsComp = new List<Cards>();//List of computer's cards
+        List<Cards> myListofCards = new List<Cards>();//List of user's cards
+        List<Cards> deckCards = new List<Cards>();//Original Deck that will be shuffled and dealt out
+        List<Cards> tempList = new List<Cards>();//These lists deal with cards that have been won/lost
+        List<Cards> tempList2 = new List<Cards>();//Cards put in here temporarily while they are removed from/added to other lists.
+        List<Cards> drawList = new List<Cards>();//When cards draw they are stored here until the winner of next round is determined
+        List<Cards> drawList2 = new List<Cards>();//Couldn't reuse templist for this task as there are times when both would be in use resulting in duplicate cards.
 
         static Random rnd = new Random();
-       
-		
-		
+
+        public class AnotherPagePayload
+        {
+            public int parameterMoves { get; set; }//the amount of moves taken is passed to final page for later submission to azure.
+        }
+
         public MainPage()
         {      
             this.InitializeComponent();
+            //ALl of the buttons are added to event handler
+            btnPower.Tapped += myEventHandler;
+            btnSpeed.Tapped += myEventHandler;
+            btnHeart.Tapped += myEventHandler;
+            btnDefence.Tapped += myEventHandler;
+            btnChin.Tapped += myEventHandler;
+            btnTechnique.Tapped += myEventHandler;
+            btnFootwork.Tapped += myEventHandler;
+            btnStamina.Tapped += myEventHandler;
 
-            btnPower.Click += myEventHandler;
-            btnSpeed.Click += myEventHandler;
-            btnHeart.Click += myEventHandler;
-            btnDefence.Click += myEventHandler;
-            btnChin.Click += myEventHandler;
-            btnTechnique.Click += myEventHandler;
-            btnFootwork.Click += myEventHandler;
-            btnStamina.Click += myEventHandler;
-
-            DealCards();        
+            DealCards();//Cards dealt using method below.   
         }
 
         public async void DealCards()
-        {   //This method uses the 'Shuffle' method which randomizes the 40 cards in the 'json' list and puts 20 into the user's deck and 20 into the opposition's.
-            
-            await LoadLocalData();
-            int[] array = { 0, 1, 2, 3, 4, 5, 6, 7};//, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39
-            Shuffle(array);
+        {   
+            //This method uses the 'Shuffle' method which randomizes the 40 cards in the 'json' list and puts 20 into the user's deck and 20 into the opposition's.          
+            await LoadLocalData();//Call in card objects from text file.
+            int[] array = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39 };//
+            Shuffle(array);//40 integers above are shuffled here.
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 20; i++)
             {
                 myListofCards.Add(deckCards[array[i]]);
             }
-            //for (int i = 20; i < 40; i++)
-            for (int i = 4; i < 8; i++)
+            for (int i = 20; i < 40; i++)
             {
-
                 myListofCardsComp.Add(deckCards[array[i]]);
             }
-            imgMyCard.Source = new BitmapImage(new Uri(myListofCards[0].cardPicture, UriKind.Absolute));
-            ImageCard.Source = new BitmapImage(new Uri(myListofCardsComp[0].cardPicture, UriKind.Absolute));
+
+            imgMyCard.Source = new BitmapImage(new Uri(myListofCards[0].cardPicture, UriKind.Absolute));//Set left card
+            ImageCard.Source = new BitmapImage(new Uri(myListofCardsComp[0].cardPicture, UriKind.Absolute));//Set right card.
 
             var assets = await Package.Current.InstalledLocation.GetFolderAsync("assets");
             var buzzer = await assets.GetFileAsync("shuffle.wav");
@@ -99,14 +104,16 @@ namespace TomTrumpsMark2
 
         public async Task LoadLocalData()
         {
+            //Load card objects using Json.
             var file = await Package.Current.InstalledLocation.GetFileAsync("Data\\boxers.txt");
             var result = await FileIO.ReadTextAsync(file);
             var boxerList = JsonArray.Parse(result);
-            CreateDogsList(boxerList);
+            CreateBoxerList(boxerList);
         }
 
-        public void CreateDogsList(JsonArray boxerList)
+        public void CreateBoxerList(JsonArray boxerList)
         {
+            //Converting JSON to usable code.
             foreach (var item in boxerList)
             {
                 var oneBoxer = item.GetObject();
@@ -158,13 +165,13 @@ namespace TomTrumpsMark2
 
         private async void myEventHandler(object sender, RoutedEventArgs e)
         {
-            
-            if (leftCardOpen == true)
+            //Event handler deals with ALL buttons.
+            if (leftCardOpen == true)//Buttons can only be clicked while the leftcard is faceup.
             {
                
                 if (myListofCardsComp.Count != 0 && myListofCards.Count != 0)
                 {
-                    rectBlock.Visibility = Visibility.Visible;
+                    rectBlock.Visibility = Visibility.Visible;//ensures that nothing is clickable util you hit continue
                     var assets = await Package.Current.InstalledLocation.GetFolderAsync("assets");
                     var buzzer = await assets.GetFileAsync("cardflip.wav");
                     var stream = await buzzer.OpenAsync(FileAccessMode.Read);
@@ -176,9 +183,8 @@ namespace TomTrumpsMark2
                     txtMoves.Text = Convert.ToString(moves);
 
                     txtNextComp.Visibility = Visibility.Visible;
-                    //imgBlockCard.Visibility = Visibility.Collapsed;
 
-                    if (cardOpen == false)
+                    if (cardOpen == false)//If card is face down, user is allowed to overturn it and choose a stat.
                     {
                         if (myListofCards.Count > 0)
                         {
@@ -207,16 +213,8 @@ namespace TomTrumpsMark2
 
 
                         if (stat.Name == "btnPower")
-                        {
-                            //if (countLeft < 1)
-                            //{
-                            //    win.Text = ("You have no cards left, You Lose");
-                            //}
-                            //else if (countRight < 1)
-                            //{
-                            //    win.Text = ("Congratulations, you won");
-                            //}
-                            power();
+                        {                   
+                            power();//all stats have their own method. See below.
                         }
 
                         else if (stat.Name == "btnSpeed")
@@ -254,26 +252,41 @@ namespace TomTrumpsMark2
                             stamina();
                         }
                     }
-                    
+                    imgBlockCard.Visibility = Visibility.Collapsed;
                 }
 
-                ListLeft.Text = "";
-                ListRight.Text = "";
+                //Put this code back in to test!!! It will allow you to see all fighters in both decks.
 
-                foreach (var myCard in myListofCards)
-                {
-                    ListLeft.Text += myCard.cardName + "\n";
-                }
+                //ListLeft.Text = "";
+                //ListRight.Text = "";
 
-                foreach (var myCard2 in myListofCardsComp)
-                {
-                    ListRight.Text += myCard2.cardName + "\n ";
-                }
+                //foreach (var myCard in myListofCards)
+                //{
+                //    ListLeft.Text += myCard.cardName + "\n";
+                //}
+
+                //foreach (var myCard2 in myListofCardsComp)
+                //{
+                //    ListRight.Text += myCard2.cardName + "\n ";
+                //}
             }
         }
 
-        public static void Shuffle<T>(T[] array)
+        private async void InsertTodoItem(Item todoItem)
         {
+
+            await item.InsertAsync(todoItem);
+
+        }
+
+        private void NextPage()
+        {
+            goToFinalPage();
+
+        }
+         
+        public static void Shuffle<T>(T[] array)
+        {//Shuffle the Deck
             var random = _random;
             for (int i = array.Length; i > 1; i--)
             {
@@ -282,10 +295,11 @@ namespace TomTrumpsMark2
                 array[j] = array[i - 1];
                 array[i - 1] = tmp;
             }
-        }//Shuffle the Deck
+        }
 
         private void clickHere(object sender, TappedRoutedEventArgs e)
-        {          
+        {   
+            //When you draw, you need to click this button before you click continue. 
             tempList.Add(myListofCards[0]);
             myListofCards.RemoveAt(0);
             tempList.RemoveAt(0);
@@ -303,7 +317,7 @@ namespace TomTrumpsMark2
 
         private async void Continue_Tapped(object sender, TappedRoutedEventArgs e)
         {
-           
+           //Controls whether or not the card animations should start, reverse etc.
             if (cardOpen == true)
             {
                 FlipClose.Begin();
@@ -320,18 +334,17 @@ namespace TomTrumpsMark2
                 FlipCloseLeft.Begin();
                 leftCardOpen = false;
             }
-            
-
+           
             win.Text = "";
             draw.Text = "";
             lose.Text = "";
             txtNextComp.Text = "";
             
-            rectBlock.Visibility = Visibility.Collapsed;
+            rectBlock.Visibility = Visibility.Collapsed;//Makes buttons usable
             txtMoveslbl.Visibility = Visibility.Visible;
             txtMoves.Visibility = Visibility.Visible;
 			
-            if ((winCheck==true)&&(cardOpen == false))
+            if ((winCheck==true)&&(cardOpen == false))//If you won, do this
             {
                 imgMyCard.Source = new BitmapImage(new Uri(myListofCards[0].cardPicture, UriKind.Absolute));
                 RightCardGoesLeft.Stop();
@@ -339,7 +352,7 @@ namespace TomTrumpsMark2
                 RightCardGoesLeft.Begin();
            
             }
-            else if (loseCheck == true)
+            else if (loseCheck == true)//if you lost, do this
             {
                 imgMyCard.Source = new BitmapImage(new Uri(myListofCards[0].cardPicture, UriKind.Absolute));
                 
@@ -360,7 +373,7 @@ namespace TomTrumpsMark2
 
             if (myListofCardsComp.Count < 1)
             {
-                this.Frame.Navigate(typeof(Final));
+                NextPage();
             }
             else if ((myListofCards.Count < 1))
             {
@@ -373,7 +386,7 @@ namespace TomTrumpsMark2
         
         private async void CardTurns_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            
+            //If card is face down, turn it over
 
             if ((leftCardOpen == false)&& (loseCheck==false))
             {
@@ -382,6 +395,7 @@ namespace TomTrumpsMark2
             }
             else if ((leftCardOpen == false)&& (loseCheck==true))
             {
+                //if you lost the last round, when the card turns over all of the card details are masked.
                 imgBlockCard.Visibility = Visibility.Visible;
                 FlipOpenLeft.Begin();
                 FlipOpenLeftBlock.Begin();
@@ -396,9 +410,6 @@ namespace TomTrumpsMark2
 
             _buzzer = new MediaElement();
             _buzzer.SetSource(stream, buzzer.ContentType);
-
-            imgBlockCard.Visibility = Visibility.Collapsed;
-
             
         }
         public void winConditions()
@@ -415,42 +426,34 @@ namespace TomTrumpsMark2
                     myListofCards.AddRange(drawList2);
                     drawList.Clear();
                     drawList2.Clear();
+                    //When you win, take anything that's in the draw pile and then clear the drawpile.
                 }
                 win.Visibility = Visibility.Visible;
-                //imgBlockCard.Visibility = Visibility.Collapsed;
                 FlipOpen.Begin();
                 cardOpen = true;
                 win.Text = "You won the round! \n" + myListofCards[0].cardName.ToString() + " beats " + myListofCardsComp[0].cardName.ToString() + ", \nHit continue to proceed.";
             
                 if (myListofCardsComp.Count <1)
                 {
-                    this.Frame.Navigate(typeof(Final));
+                    goToFinalPage();
+                   
                 }
-
             
                 tempList.Add(myListofCards[0]);
                 myListofCards.RemoveAt(0);
                 myListofCards.Add(tempList[0]);
                 tempList.RemoveAt(0);
                 myListofCards.Add(myListofCardsComp[0]);
-                myListofCardsComp.RemoveAt(0);
-            
-                if (myListofCardsComp.Count > 1)
-                {
-                    txtNextComp.Text = ("The next challenger is " + myListofCardsComp[0].cardName.ToString());
-                }
-                else if (myListofCardsComp.Count == 1)
-                {
-                    txtNextComp.Text = myListofCardsComp[0].cardName.ToString()+" is the opponent's last card!";
-                }
-
+                myListofCardsComp.RemoveAt(0);          
                 btnContinue.Visibility = Visibility.Visible;
-                imgBlockCard.Visibility = Visibility.Collapsed;
-
                 leftCounter.Text = Convert.ToString(myListofCards.Count);
-                rightCounter.Text = Convert.ToString(myListofCardsComp.Count);
-            
-           
+                rightCounter.Text = Convert.ToString(myListofCardsComp.Count);    
+        }
+
+        public void goToFinalPage()
+        {
+              payload.parameterMoves = moves;
+              this.Frame.Navigate(typeof(Final), payload);
         }
 
         public void loseConditions()
@@ -480,6 +483,8 @@ namespace TomTrumpsMark2
                 lose.Text = "You Lose.\n" + myListofCards[0].cardName.ToString();
                 lose.Text += " loses to " + myListofCardsComp[0].cardName.ToString() + ", \nHit continue to proceed.";
 
+                //storing comop card in temp list. Removing comp card from front of list, add it from temp to front of list, remove from temp list
+                //adding leftCard to templist, removing from front of left list, adding from templist to back of complist, clear templist.
                 tempList.Add(myListofCardsComp[0]);
                 ImageCard.Source = new BitmapImage(new Uri(myListofCardsComp[0].cardPicture, UriKind.Absolute));
 
@@ -488,19 +493,11 @@ namespace TomTrumpsMark2
                 tempList.RemoveAt(0);
                 myListofCardsComp.Add(myListofCards[0]);
                 myListofCards.RemoveAt(0);
-                if (myListofCardsComp.Count > 1)
-                {
-                    txtNextComp.Text = ("The next challenger is " + myListofCardsComp[0].cardName.ToString());
-                }
-                else if (myListofCardsComp.Count < 2)
-                {
-                    txtNextComp.Text = "Opponent is on his last card!";
-                }
-                
+         
                 leftCounter.Text = Convert.ToString(myListofCards.Count);
                 rightCounter.Text = Convert.ToString(myListofCardsComp.Count);
                 btnContinue.Visibility = Visibility.Visible;
-               
+                
             }
 
             loseCheck = true;
@@ -539,7 +536,7 @@ namespace TomTrumpsMark2
         {
             if (myListofCards[0].power != 0)
             {
-                if (myListofCards.Count > 0 && myListofCards.Count < 9)//41
+                if (myListofCards.Count > 0 && myListofCards.Count < 41)//41
                 {
                     if (myListofCards[0].power > myListofCardsComp[0].power)
                     {
@@ -556,7 +553,7 @@ namespace TomTrumpsMark2
 
         public void speed()
         {
-            if (myListofCards.Count > 0 && myListofCards.Count < 9)
+            if (myListofCards.Count > 0 && myListofCards.Count < 41)
             {
                 if (myListofCards[0].speed > myListofCardsComp[0].speed)
                 {
@@ -574,7 +571,7 @@ namespace TomTrumpsMark2
 
         public void heart()
         {
-            if (myListofCards.Count > 0 && myListofCards.Count < 9)
+            if (myListofCards.Count > 0 && myListofCards.Count < 41)
                 {
                     if (myListofCards[0].heart > myListofCardsComp[0].heart)
                     {
@@ -593,7 +590,7 @@ namespace TomTrumpsMark2
 
         public void defence()
         {
-            if (myListofCards.Count > 0 && myListofCards.Count < 9)
+            if (myListofCards.Count > 0 && myListofCards.Count < 41)
             {
                 if (myListofCards[0].defence > myListofCardsComp[0].defence)
                 {
@@ -611,7 +608,7 @@ namespace TomTrumpsMark2
 
         public void chin()
         {
-            if (myListofCards.Count > 0 && myListofCards.Count < 9)
+            if (myListofCards.Count > 0 && myListofCards.Count < 41)
             {
                 if (myListofCards[0].chin > myListofCardsComp[0].chin)
                 {
@@ -629,7 +626,7 @@ namespace TomTrumpsMark2
 
         public void technique()
         {
-            if (myListofCards.Count > 0 && myListofCards.Count < 9)
+            if (myListofCards.Count > 0 && myListofCards.Count < 41)
             {
                 if (myListofCards[0].technique > myListofCardsComp[0].technique)
                 {
@@ -647,7 +644,7 @@ namespace TomTrumpsMark2
 
         public void footwork()
         {
-            if (myListofCards.Count > 0 && myListofCards.Count < 9)
+            if (myListofCards.Count > 0 && myListofCards.Count < 41)
             {
                 if (myListofCards[0].footwork > myListofCardsComp[0].footwork)
                 {
@@ -665,7 +662,7 @@ namespace TomTrumpsMark2
 
         public void stamina()
         {
-            if (myListofCards.Count > 0 && myListofCards.Count < 9)
+            if (myListofCards.Count > 0 && myListofCards.Count < 41)
             {
                 if (myListofCards[0].stamina > myListofCardsComp[0].stamina)
                 {
@@ -682,14 +679,34 @@ namespace TomTrumpsMark2
         }
 
 
-        private void btnBack(object sender, RoutedEventArgs e)
+        private async void btnBack(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(StartPage));
+            
+            MessageDialog messageDialog = new MessageDialog("If you quit now your progress will be lost. Would you like to quit anyway?", "Warning.");
+            messageDialog.Commands.Add(new UICommand("Yes", new UICommandInvokedHandler(CommandHandler)));
+            messageDialog.Commands.Add(new UICommand("Cancel", new UICommandInvokedHandler(CommandHandler)));
+
+            await messageDialog.ShowAsync();
+            
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+         private void CommandHandler(IUICommand command)
         {
+            var commandLabel = command.Label;
+             switch (commandLabel)
+             {
+                 case "Yes":
+                     this.Frame.Navigate(typeof(StartPage));
+                     break;
+
+                 case "Cancel":
+
+                     break;
+             }
+
 
         }
+
+      
     }
 }

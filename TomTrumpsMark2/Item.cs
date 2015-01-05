@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace TomTrumpsMark2
 {
@@ -10,6 +11,11 @@ namespace TomTrumpsMark2
     {
         public string Id { get; set; }
         public string Text { get; set; }
+
+       
+
+        [JsonProperty(PropertyName = "movesT")]
+        public int Moves { get; set; }
     }
 
 

@@ -24,36 +24,42 @@
     <Viewbox Name="grid_jeu" Stretch="Fill" Grid.Column="1" Grid.Row="1"  >
 
         <Grid>
-        <Grid.Background>
-            <ImageBrush Stretch="Fill" ImageSource="Assets/MenuFinished1.png"/>
-        </Grid.Background>
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <EntranceThemeTransition/>
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="140"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+            <Grid.Background>
+                <ImageBrush Stretch="Fill" ImageSource="Assets/MenuFinished2.png"/>
+            </Grid.Background>
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition/>
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="140"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <!-- Back button and page title -->
-        <Grid HorizontalAlignment="Right" Height="608" VerticalAlignment="Bottom" Width="1346" Margin="0,0,10,10" Grid.Row="1">
-            <Button x:Name="btnPlay" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Start_Click" Height="112" Width="253" BorderThickness="1" Opacity="0.01" Margin="530,294,0,0">
-                <Button.Background>
-                    <SolidColorBrush Color="Black" Opacity="0.0099999997764825821"/>
-                </Button.Background>
-                <Button.BorderBrush>
-                    <SolidColorBrush Color="White" Opacity="0.01"/>
-                </Button.BorderBrush>
-                <Grid HorizontalAlignment="Left" Height="244" VerticalAlignment="Top" Width="830"/>
-            </Button>
-            <Button  HorizontalAlignment="Right" Margin="0,0,563,7" VerticalAlignment="Bottom" Width="253" Click="Rules_Click"  Height="67" ManipulationMode="None" BorderThickness="0" Opacity="0.01">
-                <Button.Background>
-                    <SolidColorBrush Color="Black" Opacity="0.0099999997764825821"/>
-                </Button.Background>
-            </Button>
+            <!-- Back button and page title -->
+            <Grid HorizontalAlignment="Right" Height="608" VerticalAlignment="Bottom" Width="1346" Margin="0,0,10,10" Grid.Row="1">
+                <Button x:Name="btnPlay" HorizontalAlignment="Left" VerticalAlignment="Top" Tapped="Start_Click" Height="112" Width="253" BorderThickness="1" Opacity="0.01" Margin="530,298,0,0">
+                    <Button.Background>
+                        <SolidColorBrush Color="Black" Opacity="0.0099999997764825821"/>
+                    </Button.Background>
+                    <Button.BorderBrush>
+                        <SolidColorBrush Color="White" Opacity="0.01"/>
+                    </Button.BorderBrush>
+                    <Grid HorizontalAlignment="Left" Height="244" VerticalAlignment="Top" Width="830"/>
+                </Button>
+                <Button  HorizontalAlignment="Right" Margin="0,0,644,7" VerticalAlignment="Bottom" Width="265" Tapped="Rules_Click"  Height="67" ManipulationMode="None" BorderThickness="0" Opacity="0.01">
+                    <Button.Background>
+                        <SolidColorBrush Color="Black" Opacity="0.0099999997764825821"/>
+                    </Button.Background>
+                </Button>
+                <Button  HorizontalAlignment="Right" Margin="0,0,380,7" VerticalAlignment="Bottom" Width="265" Tapped="Scores_Tapped"  Height="67" ManipulationMode="None" BorderThickness="0" Opacity="0.01">
+                    <Button.Background>
+                        <SolidColorBrush Color="Black" Opacity="0.0099999997764825821"/>
+                    </Button.Background>
+                </Button>
+            </Grid>
+
         </Grid>
-    </Grid>
-        </Viewbox>
+    </Viewbox>
 </Page>

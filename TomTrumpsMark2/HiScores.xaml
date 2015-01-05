@@ -1,0 +1,112 @@
+﻿<Page
+    x:Name="pageRoot"
+    x:Class="TomTrumpsMark2.HiScores"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TomTrumpsMark2"
+    xmlns:common="using:TomTrumpsMark2.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
+        <x:String x:Key="AppName">My Application</x:String>
+    </Page.Resources>
+	 <Viewbox Name="grid_jeu" Stretch="Fill" Grid.Column="1" Grid.Row="1"  >
+   
+    <!--
+        This grid acts as a root panel for the page that defines two rows:
+        * Row 0 contains the back button and page title
+        * Row 1 contains the rest of the page layout
+    -->
+    <Grid>
+        <Grid.Background>
+            <ImageBrush Stretch="Fill" ImageSource="Assets/background.png"/>
+        </Grid.Background>
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Back button and page title -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="159"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="backButton" 
+                        Style="{StaticResource NavigationBackButtonNormalStyle}"
+                        VerticalAlignment="Top"
+                        AutomationProperties.Name="Back"
+                        AutomationProperties.AutomationId="BackButton"
+                        AutomationProperties.ItemType="Navigation Button" Height="133" Width="154" Tapped="back_Tapped"/>
+            <TextBlock Grid.Column="1" Margin="10" TextWrapping="Wrap" Text="HALL OF FAME" FontSize="96" FontFamily="Algerian" HorizontalAlignment="Center">
+                <TextBlock.Foreground>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="Black" Offset="0"/>
+                        <GradientStop Color="#FFC9A23A" Offset="0.399"/>
+                    </LinearGradientBrush>
+                </TextBlock.Foreground>
+            </TextBlock>
+        </Grid>
+        <Button x:Name="btnView" Content="View Scores" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,271,0,0" Tapped="View_Tapped" Grid.Row="1" Height="83" Width="319" Foreground="#FF3AFF00" FontFamily="AR DELANEY" FontSize="48" Background="Black"/>
+        <ListView  x:Name="ListItems" HorizontalAlignment="Left" Height="504" VerticalAlignment="Top" Width="401" Margin="355,104,0,0"  Grid.Row="1">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+
+                        <!--<TextBlock Name="WhenCreated" Text="{Binding CreatedAt}" VerticalAlignment="Center"/>-->
+                        <!--TODO: Replace "Id" with "Text" in the CheckBox element above and comment the following TextBlock to hide the id and restore the UI to that of quick start project-->
+                        <TextBlock x:Name="TodoText" Text="{Binding Text}" FontSize="44" Padding="8" />
+
+
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ListView  x:Name="ListItems2" HorizontalAlignment="Left" Height="504" VerticalAlignment="Top" Width="372" Margin="761,104,0,0"  Grid.Row="1">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+
+                        <!--<TextBlock Name="WhenCreated" Text="{Binding CreatedAt}" VerticalAlignment="Center"/>-->
+                        <!--TODO: Replace "Id" with "Text" in the CheckBox element above and comment the following TextBlock to hide the id and restore the UI to that of quick start project-->
+
+                        <TextBlock x:Name="TodoText2" Text="{Binding Moves}" FontSize="44" Padding="8" />
+
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <TextBlock Height="100" TextWrapping="Wrap" Text="TextBlock" Width="100"/>
+        </ListView>
+        <TextBlock  x:Name="txtLoad" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Loading Scores. Please Wait..." VerticalAlignment="Top" Margin="34,306,0,0" Grid.Row="1" Height="45" Width="368" FontSize="24" Visibility="Collapsed"/>
+        <TextBlock x:Name="txtName" HorizontalAlignment="Left" TextWrapping="Wrap" Text="NAME" VerticalAlignment="Top" Margin="355,10,0,0" Grid.Row="1" Height="89" Width="401" FontFamily="AR DELANEY" FontSize="72" Visibility="Collapsed">
+            <TextBlock.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="0"/>
+                    <GradientStop Color="#FF3AFF0E" Offset="0.494"/>
+                </LinearGradientBrush>
+            </TextBlock.Foreground>
+        </TextBlock>
+        <TextBlock x:Name="txtRounds" HorizontalAlignment="Left" TextWrapping="Wrap" Text="MOVES" VerticalAlignment="Top" Margin="761,10,0,0" Grid.Row="1" Height="89" Width="372" FontFamily="AR DELANEY" FontSize="72" Visibility="Collapsed">
+            <TextBlock.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="0"/>
+                    <GradientStop Color="#FF33FF05" Offset="0.506"/>
+                </LinearGradientBrush>
+            </TextBlock.Foreground>
+        </TextBlock>
+        <Image x:Name="imgGold" Visibility="Collapsed" Margin="248,116,1043,437" Grid.Row="1" Source="Assets/gold1.png" Stretch="Fill" Width="75" Height="75"/>
+        <Image x:Name="imgSilver" Visibility="Collapsed"  Margin="248,196,1043,357" Grid.Row="1" Source="Assets/silver1.png" Stretch="Fill" Width="75" Height="75"/>
+        <Image x:Name="imgBronze" Visibility="Collapsed"  Margin="248,276,1043,277" Grid.Row="1" Source="Assets/bronze1.png" Stretch="Fill" Width="75" Height="75"/>
+
+    </Grid>
+	</Viewbox>
+</Page>

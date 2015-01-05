@@ -170,7 +170,7 @@
 				<ImageBrush Stretch="Fill" ImageSource="Assets/background.png"/>
 			</Grid.Background>
 
-			<Button x:Name="backButton" Click="btnBack" Margin="0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
+			<Button x:Name="backButton" Tapped="btnBack" Margin="0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
 				Style="{StaticResource NavigationBackButtonNormalStyle}"
 				VerticalAlignment="Stretch"
 				AutomationProperties.Name="Back"
@@ -215,8 +215,8 @@
 				<Grid    Grid.Column="1" Margin="0" >
 					<TextBlock x:Name="txtNextComp" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" Margin="0" Height="52" FontSize="24"/>
 					<TextBlock x:Name="Score" HorizontalAlignment="Center" Height="36" Margin="0" TextWrapping="Wrap" Text="SCORE" VerticalAlignment="Bottom" Width="145" TextAlignment="Center" FontSize="29.333" Foreground="#FF3AFF00" FontFamily="Segoe UI Semibold" FontWeight="Bold"/>
-					<TextBlock x:Name="leftCounter" HorizontalAlignment="Left" Height="35" Margin="0" TextWrapping="Wrap" Text="4" VerticalAlignment="Bottom" Width="68" FontSize="29.333" TextAlignment="Center" Foreground="#FF3AFD00" FontFamily="Segoe UI Semibold" FontWeight="Bold"/>
-					<TextBlock x:Name="rightCounter" HorizontalAlignment="Right" Height="35" Margin="0" TextWrapping="Wrap" Text="4" VerticalAlignment="Bottom" Width="72" FontSize="29.333" TextAlignment="Center" Foreground="#FF3DFF04" FontFamily="Segoe UI Semibold" FontWeight="Bold"/>
+					<TextBlock x:Name="leftCounter" HorizontalAlignment="Left" Height="35" Margin="0" TextWrapping="Wrap" Text="20" VerticalAlignment="Bottom" Width="68" FontSize="29.333" TextAlignment="Center" Foreground="#FF3AFD00" FontFamily="Segoe UI Semibold" FontWeight="Bold"/>
+					<TextBlock x:Name="rightCounter" HorizontalAlignment="Right" Height="35" Margin="0" TextWrapping="Wrap" Text="20" VerticalAlignment="Bottom" Width="72" FontSize="29.333" TextAlignment="Center" Foreground="#FF3DFF04" FontFamily="Segoe UI Semibold" FontWeight="Bold"/>
 					<TextBlock x:Name="ListRight" HorizontalAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Top" Margin="0,50,0,0" Height="450" Width="200"/>
 					<TextBlock x:Name="ListLeft" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Height="450" Width="200" Margin="0,50,0,0"/>
 				</Grid>
@@ -229,7 +229,7 @@
                 			<PlaneProjection/>
                 		</Image.Projection>
                 	</Image>
-                	<Image x:Name="imgMyCard" Stretch="Fill" Margin="0">
+                	<Image x:Name="imgMyCard" Margin="0">
                         <!--Source="Assets/front.png"-->
                 		<Image.Projection>
                 			<PlaneProjection RotationY="-90"/>
@@ -243,7 +243,7 @@
                 			<CompositeTransform/>
                 		</Image.RenderTransform>
                 	</Image>
-                	<Image x:Name="imgBlockCard"  Source="Assets/imgBlockCard.png" Margin="0,282,0,109" HorizontalAlignment="Center" Visibility="Collapsed">
+                	<Image x:Name="imgBlockCard"  Source="Assets/mystery.png" Margin="0" Visibility="Collapsed">
                 		<Image.Projection>
                 			<PlaneProjection/>
                 		</Image.Projection>
@@ -332,16 +332,16 @@
 			</Grid>
 			<Grid Grid.Row="0" Margin="0">
 				<Grid Margin="231,0,0,0">
-					<Button x:Name ="btnContinue" Content="Continue" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0"  Tapped="Continue_Tapped" BorderThickness="0" BorderBrush="{x:Null}" Foreground="{x:Null}" Width="150" Height="150" Visibility="Collapsed">
+					<Button x:Name ="btnContinue" Content="" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0"  Tapped="Continue_Tapped" BorderThickness="0" BorderBrush="{x:Null}" Foreground="{x:Null}" Width="150" Height="150" Visibility="Collapsed">
                        
                         <Button.Background>
 							<ImageBrush Stretch="Fill" ImageSource="Assets/next.png"/>
                             
 						</Button.Background>
 					</Button>
-					<TextBlock x:Name="win" HorizontalAlignment="Left" Height="150" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="895" FontSize="32" FontWeight="Bold" FontFamily="Segoe WP Semibold" Visibility="Collapsed" Foreground="#FF27FF05"/>
-					<TextBlock x:Name="lose" HorizontalAlignment="Left" Height="169" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="850" FontSize="32" FontWeight="Bold" FontFamily="AR DARLING" Visibility="Collapsed" Foreground="#FFFF0202"/>
-					<TextBlock x:Name="draw" HorizontalAlignment="Left" Height="169" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="850" FontSize="32" FontWeight="Bold" FontFamily="Segoe UI Semibold" Visibility="Collapsed" Foreground="#FF0023FF"/>
+					<TextBlock x:Name="win" HorizontalAlignment="Left" Height="130" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="960" FontSize="32" FontWeight="Bold" FontFamily="Segoe WP Semibold" Foreground="#FF27FF05" Visibility="Collapsed"/>
+					<TextBlock x:Name="lose" HorizontalAlignment="Left" Height="139" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="960" FontSize="32" FontWeight="Bold" FontFamily="AR DARLING" Foreground="#FFFF0202" Visibility="Collapsed"/>
+					<TextBlock x:Name="draw" HorizontalAlignment="Left" Height="128" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="960" FontSize="32" FontWeight="Bold" FontFamily="Segoe UI Semibold" Foreground="#FF0023FF" Visibility="Collapsed"/>
 					<Button x:Name ="btnClickHere" Content="Continue" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0"  Tapped="clickHere" BorderThickness="0" BorderBrush="#FFCB2D2D" Foreground="{x:Null}" Width="150" Height="150" Visibility="Collapsed">
 						<Button.Background>
 							<ImageBrush ImageSource="ms-appx:/Assets/next.png" Stretch="Fill"/>
@@ -349,9 +349,9 @@
 					</Button>
 					</Grid>
 			</Grid>
-			<Rectangle x:Name="rectBlock" Fill="#FFF4F4F5" Margin="0" Stroke="Black" Opacity="0" Grid.Row="1" Grid.ColumnSpan="4" Grid.RowSpan="2" Visibility="Collapsed"/>
 			<TextBlock x:Name="txtMoves" HorizontalAlignment="Left" Height="108" Margin="993,32,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="168" FontSize="64" Visibility="Collapsed"/>
 			<TextBlock x:Name="txtMoveslbl" HorizontalAlignment="Left" Height="23" Margin="993,4,0,0" TextWrapping="Wrap" Text="MOVES" VerticalAlignment="Top" Width="168" FontSize="16" Visibility="Collapsed"/>
+			<Rectangle x:Name="rectBlock" Fill="#FFF4F4F5" Margin="0" Stroke="Black" Opacity="0" Grid.Row="1" Grid.ColumnSpan="4" Grid.RowSpan="2" Visibility="Collapsed"/>
         </Grid>
 
 	</Viewbox>

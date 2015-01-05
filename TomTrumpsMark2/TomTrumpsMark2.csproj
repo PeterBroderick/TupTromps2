@@ -14,8 +14,11 @@
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>TomTrumpsMark2_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>TomTrumpsMark2_StoreKey.pfx</PackageCertificateKeyFile>
     <ExpressionBlendVersion>12.0.51020.0</ExpressionBlendVersion>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxBundlePlatforms>neutral</AppxBundlePlatforms>
+    <PackageCertificateThumbprint>971E58D773DED2B5D17CC350F1104C22206B12D5</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -114,6 +117,9 @@
     <Compile Include="Final.xaml.cs">
       <DependentUpon>Final.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HiScores.xaml.cs">
+      <DependentUpon>HiScores.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Item.cs" />
     <Compile Include="Lose.xaml.cs">
       <DependentUpon>Lose.xaml</DependentUpon>
@@ -134,6 +140,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="packages.config" />
+    <None Include="TomTrumpsMark2_StoreKey.pfx" />
     <None Include="TomTrumpsMark2_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -145,13 +152,17 @@
     <Content Include="Assets\background.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\backgroundLose.png" />
+    <Content Include="Assets\backgroundWin1.png" />
     <Content Include="Assets\benn.png" />
+    <Content Include="Assets\bronze1.png" />
     <Content Include="Assets\calzaghe.png" />
     <Content Include="Assets\cardflip.wav" />
     <Content Include="Assets\cardTurn.wav" />
     <Content Include="Assets\chavez.png" />
     <Content Include="Assets\collins.png" />
     <Content Include="Assets\cotto.png" />
+    <Content Include="Assets\crown.png" />
     <Content Include="Assets\delahoya.png" />
     <Content Include="Assets\donaire.png" />
     <Content Include="Assets\duran.png" />
@@ -159,6 +170,7 @@
     <Content Include="Assets\foreman.png" />
     <Content Include="Assets\froch.png" />
     <Content Include="Assets\gatti.png" />
+    <Content Include="Assets\gold1.png" />
     <Content Include="Assets\golovkin.png" />
     <Content Include="Assets\groves.png" />
     <Content Include="Assets\hagler.png" />
@@ -175,7 +187,7 @@
     <Content Include="Assets\matthysse.png" />
     <Content Include="Assets\mayweather.png" />
     <Content Include="Assets\mcguigan.png" />
-    <Content Include="Assets\MenuFinished1.png" />
+    <Content Include="Assets\MenuFinished2.png" />
     <Content Include="Assets\mosley.png" />
     <Content Include="Assets\mward.png" />
     <Content Include="Assets\mystery.png">
@@ -189,6 +201,7 @@
     <Content Include="Assets\robinson.png" />
     <Content Include="Assets\rocky.png" />
     <Content Include="Assets\shuffle.wav" />
+    <Content Include="Assets\silver1.png" />
     <Content Include="Assets\SmallLogo.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\StoreLogo.scale-100.png" />
@@ -199,6 +212,7 @@
     <Content Include="Common\ReadMe.txt" />
     <Content Include="Data\boxers.txt" />
     <Content Include="Images\tyson.png" />
+    <None Include="Package.StoreAssociation.xml" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -206,6 +220,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Final.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HiScores.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
